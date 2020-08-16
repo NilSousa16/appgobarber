@@ -1,5 +1,5 @@
 import React, { useCallback, useRef } from 'react';
-import { Image, View, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { Image, View, ScrollView, KeyboardAvoidingView, Platform, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 
@@ -21,6 +21,9 @@ const SignIn: React.FC = () => {
   No caso para fazer o button dar submit no formulário
   */
   const formRef = useRef<FormHandles>(null);
+
+  /* Quando for executar o foco ele já possue o método focus */
+  const passwordInputRef = useRef<TextInput>(null);
 
   const navigation = useNavigation();
 
@@ -50,10 +53,43 @@ const SignIn: React.FC = () => {
               <Title>Faça seu logon</Title>
             </View>
             <Form ref={formRef} onSubmit={handleSignIn}>
-              <Input name="email" icon="mail" placeholder="E-mail"/>
-              <Input name="password" icon="lock" placeholder="Senha"/>
+              <Input
+                autoCorrect={false}
+                autoCapitalize="none"
+                keyboardType="email-address"
+                name="email"
+                icon="mail"
+                placeholder="E-mail"
+                /* Modifica o botão de enter */
+                returnKeyType="next"
+                /* Função disparada ao clicar no botão */
+                onSubmitEditing={() => {
+                  passwordInputRef.current.focus();
+                }}
+              />
 
-              <Button onPress={() => {formRef.current?.submitForm();}}>Entrar</Button>
+              <Input
+                ref={passwordInputRef}
+                name="password"
+                icon="lock"
+                placeholder="Senha"
+                /* Identificar campo de senha */
+                secureTextEntry
+                /* Modifica o botão de enter */
+                returnKeyType="send"
+                /* Função disparada ao clicar no botão */
+                onSubmitEditing={() => {
+                  formRef.current?.submitForm();
+                }}
+              />
+
+              <Button
+                onPress={() => {
+                  formRef.current?.submitForm();
+                }}
+              >
+                Entrar
+              </Button>
             </Form>
             <ForgotPassword onPress={() => {}}>
               <ForgotPasswordText>
