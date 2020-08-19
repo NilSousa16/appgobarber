@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
+import api from '../../services/api';
 
 import getValidationErrors from '../../utils/getValidationErrors';
 
@@ -56,11 +57,15 @@ const SignUp: React.FC = () => {
           abortEarly: false,
         });
 
-        // await api.post('/users', data);
-        // /** Redireciona após o cadastro */
-        // history.push('/');
+        await api.post('/users', data);
 
+        Alert.alert(
+          'Cadastro realizado com sucesso!',
+          'Você já pode fazer login na aplicação.',
+        )
 
+        /** Redireciona após o cadastro */
+        navigation.navigate('SignIn');
       } catch (err) {
         /** Erros capturados */
 
@@ -72,10 +77,13 @@ const SignUp: React.FC = () => {
           return;
         }
 
-        Alert.alert('Erro no cadastro', 'Ocorreu um erro ao fazer cadastro, cheque as credenciais.');
+        Alert.alert(
+          'Erro no cadastro',
+          'Ocorreu um erro ao fazer cadastro, cheque as credenciais.'
+        );
       }
     },
-    [],
+    [navigation],
   );
 
   return (
