@@ -8,6 +8,8 @@ import { Form } from '@unform/mobile';
 /* Tipagem com os métodos para manipular o formulário de maneira direta */
 import { FormHandles } from '@unform/core';
 
+import { useAuth } from '../../hooks/auth';
+
 import getValidationErrors from '../../utils/getValidationErrors'
 
 import Input from '../../components/Input';
@@ -34,6 +36,10 @@ const SignIn: React.FC = () => {
 
   const navigation = useNavigation();
 
+  const { signIn, user } = useAuth();
+
+  console.log(user);
+
   // Lida com o submit e recebe como parâmetro os dados do formulário
   const handleSignIn = useCallback(
     async (data: SingInFormData) => {
@@ -58,12 +64,13 @@ const SignIn: React.FC = () => {
            * não somente o primeiro encontrado */
           abortEarly: false,
         });
-        // await signIn({
-        //   email: data.email,
-        //   password: data.password,
-        // });
+        console.log(data);
 
-        // history.push('/dashboard');
+        await signIn({
+          email: data.email,
+          password: data.password,
+        });
+
       } catch (err) {
         // Erros capturados
         if (err instanceof Yup.ValidationError) {
