@@ -15,6 +15,7 @@ interface SingInCredentials {
 
 interface AuthContextData {
   user: object;
+  loading: boolean;
   signIn(credentials: SingInCredentials): Promise<void>;
   signOut(): void;
 }
@@ -24,6 +25,8 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 // children - tudo o que o elemento recebe como filho
 export const AuthProvider: React.FC = ({ children }) => {
+  // Cria um estado de loading para realizar transição da tela de login para a dashboard
+  const [loading, setLoading] = useState(true);
   // Armazena o estado de logado ou não
   const [data, setData] = useState<AuthState>({} as AuthState);
 
@@ -41,6 +44,8 @@ export const AuthProvider: React.FC = ({ children }) => {
       if(token[1] && user[1]){
         setData({ token: token[1], user: JSON.parse(user[1]) });
       }
+
+      setLoading(false);
     }
 
     loadStoragedData();
@@ -71,7 +76,7 @@ export const AuthProvider: React.FC = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user: data.user, signIn, signOut }}>
+    <AuthContext.Provider value={{ user: data.user, loading, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   );

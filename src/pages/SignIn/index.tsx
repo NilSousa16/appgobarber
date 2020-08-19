@@ -38,8 +38,6 @@ const SignIn: React.FC = () => {
 
   const { signIn, user } = useAuth();
 
-  console.log(user);
-
   // Lida com o submit e recebe como parâmetro os dados do formulário
   const handleSignIn = useCallback(
     async (data: SingInFormData) => {
@@ -64,7 +62,6 @@ const SignIn: React.FC = () => {
            * não somente o primeiro encontrado */
           abortEarly: false,
         });
-        console.log(data);
 
         await signIn({
           email: data.email,
